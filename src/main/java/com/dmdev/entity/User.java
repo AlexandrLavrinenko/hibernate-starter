@@ -1,15 +1,15 @@
 package com.dmdev.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.dmdev.converter.BirthdayConverter;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
+@TypeDef(name = "shortname", typeClass = JsonBinaryType.class)
 public class User {
     // POJO (Plain Old Java Object:
     // - getters/setters, [@Data]
@@ -28,10 +29,17 @@ public class User {
     // Entity = POJO + @Id (implements Serializable interface)
 
     @Id
-    String username;
-    String firstname;
-    String lastname;
-    @Column(name = "birth_day")
-    LocalDate birthDate;
-    Integer age;
+    private String username;
+    private String firstname;
+    private String lastname;
+
+    @Convert(converter = BirthdayConverter.class)
+    @Column(name = "birth_date")
+    private Birthday birthDate;
+
+    @Type(type = "shortname")
+    private String info;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
