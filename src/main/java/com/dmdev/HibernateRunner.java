@@ -5,6 +5,7 @@ import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
 import com.dmdev.util.HibernateUtil;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.*;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
@@ -16,7 +17,13 @@ import java.time.LocalDate;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Slf4j
 public class HibernateRunner {
+//    private static final Logger log = LoggerFactory.getLogger(HibernateRunner.class);
+
     public static void main(String[] args) throws SQLException {
 //        Configuration configuration = getConfiguration();
 //        saveUser(configuration);
@@ -29,29 +36,23 @@ public class HibernateRunner {
                 .firstname("Taras")
                 .lastname("Shevchenko")
                 .build();
-
+        log.info("User entity is in a TRANSIENT state, object: {}", user);
 
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
-            try (Session session1 = sessionFactory.openSession()) {
-                session1.beginTransaction();
+            Session session1 = sessionFactory.openSession();
+            try (session1) {
+                Transaction transaction = session1.beginTransaction();
+                log.trace("Transaction is created, {}", transaction);
 
                 session1.saveOrUpdate(user);    // Transient -> Persistent
+                log.trace("User is in PERSISTENT state: {}, session: {}", user, session1);
 
                 session1.getTransaction().commit();
             }
-            try (Session session2 = sessionFactory.openSession()) {
-                session2.beginTransaction();
-
-//                User freshUser = session2.get(User.class, user.getUsername());
-//                freshUser.setFirstname("Lesya");
-//                freshUser.setLastname("Ukrainka");
-//                session2.refresh(freshUser);
-
-                user.setFirstname("Marusya");
-                Object mergedUser = session2.merge(user);
-
-                session2.getTransaction().commit();
-            }
+            log.warn("User is in DETACHED state: {}, session is closed: {}", user, session1);
+        } catch (Exception exception) {
+            log.error("Exception occured", exception);
+            throw exception;
         }
 
 
