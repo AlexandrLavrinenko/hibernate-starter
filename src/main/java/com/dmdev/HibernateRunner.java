@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.*;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.type.descriptor.sql.NVarcharTypeDescriptor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,6 +30,7 @@ public class HibernateRunner {
                 .personalInfo(PersonalInfo.builder()
                         .firstname("Ivan")
                         .lastname("Franko")
+                        .birthDate(new Birthday(LocalDate.of(2000, 1, 1)))
                         .build())
                 .build();
 
@@ -46,6 +48,17 @@ public class HibernateRunner {
                 session1.getTransaction().commit();
             }
             log.warn("User is in DETACHED state: {}, session is closed: {}", user, session1);
+
+            try (Session session2 = sessionFactory.openSession()) {
+                PersonalInfo key = PersonalInfo.builder()
+                        .firstname("Ivan")
+                        .lastname("Franko")
+                        .birthDate(new Birthday(LocalDate.of(2000, 1, 1)))
+                        .build();
+
+                User userForComplexKey = session2.get(User.class, key);
+                System.out.println(userForComplexKey);
+            }
         } catch (Exception exception) {
             log.error("Exception occured", exception);
             throw exception;

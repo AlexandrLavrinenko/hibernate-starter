@@ -1,3 +1,19 @@
+-- For complex id, which consist a few fields:
+drop table users;
+create table users
+(
+    --- KEYS ----------------------
+    firstname  VARCHAR(128),
+    lastname   VARCHAR(128),
+    birth_date DATE,
+    -------------------------------
+    username   VARCHAR(128) UNIQUE,
+    role       VARCHAR(12),
+    info       JSONB,
+    PRIMARY KEY (firstname, lastname, birth_date)   -- All columns is NOT NULL (auto)
+);
+-- --------------------------------------------------------------------------------------------
+-- For @GeneratedValue(generator = "custom_user_generator", strategy = GenerationType.SEQUENCE)
 drop table users;
 create table users
 (
