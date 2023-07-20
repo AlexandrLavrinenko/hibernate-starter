@@ -1,6 +1,7 @@
 package com.dmdev;
 
 import com.dmdev.entity.Birthday;
+import com.dmdev.entity.PersonalInfo;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
 import com.dmdev.util.HibernateUtil;
@@ -17,25 +18,20 @@ import java.time.LocalDate;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Slf4j
 public class HibernateRunner {
 //    private static final Logger log = LoggerFactory.getLogger(HibernateRunner.class);
 
-    public static void main(String[] args) throws SQLException {
-//        Configuration configuration = getConfiguration();
-//        saveUser(configuration);
-//        updateUser(configuration);
-//        deleteUser(configuration);
-//        getUser(configuration);
-        // Transient entity state
+    public static void main(String[] args) {
+
         User user = User.builder()
-                .username("12345a@gmail.com")
-                .firstname("Taras")
-                .lastname("Shevchenko")
+                .username("Ivan_Franko@gmail.com")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Ivan")
+                        .lastname("Franko")
+                        .build())
                 .build();
+
         log.info("User entity is in a TRANSIENT state, object: {}", user);
 
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
@@ -65,7 +61,9 @@ public class HibernateRunner {
 
             // DB row -> User.class
             User user = session.get(User.class, "new_admin@gmail.com");
-            user.setLastname("Tarasyao");
+            user.setPersonalInfo(PersonalInfo.builder()
+                    .lastname("Tarasyao")
+                    .build());
 
             /**
              * Force this session to flush. Must be called at the end of a
@@ -102,9 +100,11 @@ public class HibernateRunner {
 
             User user = User.builder()
                     .username("new_admin10@gmail.com")
-                    .firstname("New10")
-                    .lastname("Admin10")
-                    .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                    .personalInfo(PersonalInfo.builder()
+                            .firstname("New10")
+                            .lastname("Admin10")
+                            .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                            .build())
                     .role(Role.ADMIN)
                     .info("""
                             {
@@ -129,9 +129,11 @@ public class HibernateRunner {
 
             User user = User.builder()
                     .username("new_admin10@gmail.com")
-                    .firstname("New10")
-                    .lastname("Admin10")
-                    .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                    .personalInfo(PersonalInfo.builder()
+                            .firstname("New10")
+                            .lastname("Admin10")
+                            .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                            .build())
                     .role(Role.ADMIN)
                     .info("""
                             {
@@ -158,9 +160,11 @@ public class HibernateRunner {
 
             User user = User.builder()
                     .username("new_admin@gmail.com")
-                    .firstname("New")
-                    .lastname("Admin")
-                    .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                    .personalInfo(PersonalInfo.builder()
+                            .firstname("New")
+                            .lastname("Admin")
+                            .birthDate(new Birthday(LocalDate.of(2015, 4, 20)))
+                            .build())
                     .role(Role.ADMIN)
                     .info("""
                             {

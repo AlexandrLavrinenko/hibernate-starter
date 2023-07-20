@@ -1,6 +1,5 @@
 package com.dmdev.entity;
 
-import com.dmdev.converter.BirthdayConverter;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -29,13 +29,21 @@ public class User {
     // Entity = POJO + @Id (implements Serializable interface)
 
     @Id
-    private String username;
-    private String firstname;
-    private String lastname;
+    @GeneratedValue(generator = "custom_user_generator", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "custom_user_generator",
+            schema = "public",
+            sequenceName = "users_id_seq",  // default Hibernate sequence: hibernate_sequence
+            initialValue = 1,               // start position (default = 1)
+            allocationSize = 1)             // allocationSize() - as increment
+    private Long id;
 
-    @Convert(converter = BirthdayConverter.class)
-    @Column(name = "birth_date")
-    private Birthday birthDate;
+    @Column(unique = true)
+    private String username;
+
+    @Embedded
+    @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
+    private PersonalInfo personalInfo;
 
     @Type(type = "shortname")
     private String info;
