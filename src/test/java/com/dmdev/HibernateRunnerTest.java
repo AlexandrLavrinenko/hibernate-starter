@@ -1,6 +1,7 @@
 package com.dmdev;
 
 import com.dmdev.entity.*;
+import com.dmdev.util.HibernateTestUtil;
 import com.dmdev.util.HibernateUtil;
 import lombok.Cleanup;
 import org.hibernate.Hibernate;
@@ -17,12 +18,26 @@ import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkH2() {
+        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+             Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Company company = Company.builder()
+                    .name("H2TestCompany")
+                    .build();
+            session.save(company);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkOrderBy() {
@@ -31,9 +46,6 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             Company company = session.get(Company.class, 3);
-            // for List or Set realisation
-//            company.getUsers().forEach(System.out::println);
-            // for Map
             company.getUsers().forEach((k, v) -> System.out.println(v));
 
             session.getTransaction().commit();
@@ -203,7 +215,7 @@ class HibernateRunnerTest {
     }
 
     @Test
-    void checkOrphanRemoval () {
+    void checkOrphanRemoval() {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
 
@@ -223,13 +235,13 @@ class HibernateRunnerTest {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
 
-                session.beginTransaction();         // start transaction
+            session.beginTransaction();         // start transaction
 
 //                companyForDelete = session.get(Company.class, 3);
-                companyForDelete = session.getReference(Company.class, 3); // wrap Object to Proxy with LAZY init (Company$HibernateProxy)
+            companyForDelete = session.getReference(Company.class, 3); // wrap Object to Proxy with LAZY init (Company$HibernateProxy)
 
 
-                session.getTransaction().commit();  // finish transaction
+            session.getTransaction().commit();  // finish transaction
         }
         var users = companyForDelete.getUsers();
         System.out.println(users.size());

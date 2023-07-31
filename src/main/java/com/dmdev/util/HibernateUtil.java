@@ -15,9 +15,17 @@ public class HibernateUtil {
         //  ConnectionPool -> SessionFactory
         //  Connection -> Session
 
+        Configuration configuration = buildConfiguration();
+
+        configuration.configure();
+        return configuration.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         Configuration configuration = new Configuration();
         // XML in hibernate.cfg.hml
         // configuration.addClass(User.class);          // old variant
+
         configuration.addAnnotatedClass(User.class);    // modern variant
         configuration.addAnnotatedClass(Company.class); // modern variant
         configuration.addAnnotatedClass(Profile.class); // modern variant
@@ -32,9 +40,7 @@ public class HibernateUtil {
 
         // registry Type
         configuration.registerTypeOverride(new JsonBinaryType());
-
-        configuration.configure();
-        return configuration.buildSessionFactory();
+        return configuration;
     }
 
 }

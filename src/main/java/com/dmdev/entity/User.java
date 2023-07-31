@@ -22,7 +22,7 @@ import java.util.Set;
 @Builder
 @Entity             // Entity = POJO + @Id (implements Serializable interface)
 @Table(name = "users", schema = "public")
-@TypeDef(name = "shortname", typeClass = JsonBinaryType.class)
+@TypeDef(name = "shortname", typeClass = JsonBinaryType.class) // doesn't work with H2
 public class User implements Comparable<User>{
     @Id
     @GeneratedValue(generator = "custom_user_generator", strategy = GenerationType.IDENTITY)

@@ -1,20 +1,38 @@
 package com.dmdev.entity;
 
-import lombok.*;
-import org.hibernate.annotations.SortComparator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.SortNatural;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Data
-@ToString(exclude = "users")
-@EqualsAndHashCode(of = "name")
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "name")
+@ToString(exclude = "users")
 @Builder
 @Entity
 public class Company {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,32 +41,21 @@ public class Company {
     private String name;
 
     @Builder.Default
-    @ElementCollection
-    @CollectionTable(name = "company_locale",
-    joinColumns = @JoinColumn(name = "company_id"))
-//    @AttributeOverride(name = "lang", @Column(name = "language"))
-    @Column(name = "description")   // Map value
-    @MapKeyColumn(name = "lang")    // Map key
-    private List<String> locales = new ArrayList<>();
-//    private List<String> locales = new ArrayList<>();
-//    private List<LocaleInfo> locales = new ArrayList<>();
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "username")
+    @SortNatural
+    private Map<String, User> users = new TreeMap<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, orphanRemoval = true)
-//    @org.hibernate.annotations.OrderBy(clause = "username DESC, lastname ASC")  // SQL
-//    @javax.persistence.OrderBy("username DESC, personalInfo.lastname ASC")      // HQL
-//    @OrderColumn(name = "id")                                                   // only for List<Integer>
-    @SortNatural                                                                  // Map sort only for key, not value
-//    @SortComparator()                                                           // Class<? extends Comparator
-//    @JoinColumn(name = "company_id")
-//    private List<User> users = new ArrayList<>();
-//    private SortedSet<User> users = new TreeSet<>();
-    @MapKey(name = "username")                                                    // Entity field name
-    private Map<String, User> users = new HashMap<>();
+    @ElementCollection
+    @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
+//    @AttributeOverride(name = "lang", column = @Column(name = "language"))
+//    private List<LocaleInfo> locales = new ArrayList<>();
+    @MapKeyColumn(name = "lang")
+    @Column(name = "description")
+    private Map<String, String> locales = new HashMap<>();
 
     public void addUser(User user) {
-        // List or Set realisation
-//        users.add(user);
         users.put(user.getUsername(), user);
         user.setCompany(this);
     }
