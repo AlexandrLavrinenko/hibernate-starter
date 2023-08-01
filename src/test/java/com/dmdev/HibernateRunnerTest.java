@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
-    void checkInheritanceTABLE_PER_CLASS() {
+    void checkInheritanceSINGLE_TABLE() {
         try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -51,8 +51,8 @@ class HibernateRunnerTest {
             session.flush();
 
             session.clear();
-            Programmer programmerGet = session.get(Programmer.class, 1L);
-            User managerGet = session.get(User.class, 2L);
+            Programmer programmerGet = session.get(Programmer.class, 1L);   // 1
+            User managerGet = session.get(User.class, 2L);                  // 2
 
             session.getTransaction().commit();
         }

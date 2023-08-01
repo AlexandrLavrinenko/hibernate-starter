@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 
@@ -12,13 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Manager extends User{
+@DiscriminatorValue("manager")
+public class Manager extends User {
 
     private String projectName;
 
     @Builder
-    public Manager(Long id, PersonalInfo personalInfo, String info, Role role, String username, Company company, Profile profile, List<UserChat> userChats, String projectName) {
-        super(id, personalInfo, info, role, username, company, profile, userChats);
+    public Manager(Long id, PersonalInfo personalInfo, String username, String info, Role role, Company company, Profile profile, List<UserChat> userChats, String projectName) {
+        super(id, personalInfo, username, info, role, company, profile, userChats);
         this.projectName = projectName;
     }
 }
