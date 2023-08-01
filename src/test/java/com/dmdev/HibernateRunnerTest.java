@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
-    void checkInheritanceSINGLE_TABLE() {
+    void checkInheritanceJOIN() {
         try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
             session.beginTransaction();
