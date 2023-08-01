@@ -25,6 +25,40 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    void checkInheritanceTABLE_PER_CLASS() {
+        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+             Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Company company = Company.builder()
+                    .name("H2TestCompany")
+                    .build();
+            session.save(company);
+
+            Programmer programmer = Programmer.builder()
+                    .username("petro@gmail.com")
+                    .language(Language.JAVA)
+                    .company(company)
+                    .build();
+            session.save(programmer);
+
+            Manager manager = Manager.builder()
+                    .company(company)
+                    .projectName("Hibernate")
+                    .build();
+            session.save(manager);
+
+            session.flush();
+
+            session.clear();
+            Programmer programmerGet = session.get(Programmer.class, 1L);
+            User managerGet = session.get(User.class, 2L);
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
     void checkH2() {
         try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
@@ -93,8 +127,8 @@ class HibernateRunnerTest {
 
             Chat chat = session.get(Chat.class, 2L);
             UserChat userChat = UserChat.builder()
-                    .createdAt(Instant.now())
-                    .createdBy(user.getUsername())
+//                    .createdAt(Instant.now())
+//                    .createdBy(user.getUsername())
                     .build();
 
             userChat.setUser(user);
@@ -160,7 +194,8 @@ class HibernateRunnerTest {
              Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            User user = User.builder()
+            User user = Manager.builder()
+//            User user = User.builder()
                     .username("BestWayOneToOne@gmail.com")
                     .build();
 
@@ -196,7 +231,8 @@ class HibernateRunnerTest {
 
             session.beginTransaction();         // start transaction
 
-            User user = User.builder()
+//            User user = User.builder()
+            User user = Manager.builder()
                     .username("testOneToOne@gmail.com")
                     .build();
 
@@ -276,7 +312,8 @@ class HibernateRunnerTest {
                     .name("Facebook")
                     .build();
 
-            User user1 = User.builder()
+//            User user1 = User.builder()
+            User user1 = Manager.builder()
                     .username("lesya@ukr.net")
                     .build();
 
@@ -332,7 +369,8 @@ class HibernateRunnerTest {
 
     @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
-        User user = User.builder()
+//        User user = User.builder()
+        User user = Manager.builder()
                 .username("new_user@gmail.com")
                 .personalInfo(PersonalInfo.builder()
                         .firstname("New")

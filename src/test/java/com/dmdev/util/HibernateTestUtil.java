@@ -9,7 +9,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public class HibernateTestUtil {
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
 
-    static {    // one docker container for all tests
+    static {    // only one docker container for all tests
         postgres.start();
     }
 
