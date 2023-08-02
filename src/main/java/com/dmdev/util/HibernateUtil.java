@@ -31,8 +31,9 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Profile.class); // modern variant
         configuration.addAnnotatedClass(Chat.class);    // modern variant
         configuration.addAnnotatedClass(UserChat.class);// modern variant
-        configuration.addAnnotatedClass(Programmer.class);
-        configuration.addAnnotatedClass(Manager.class);
+//        configuration.addAnnotatedClass(Programmer.class);
+//        configuration.addAnnotatedClass(Manager.class);
+        configuration.addAnnotatedClass(Payment.class);
 
         // birth_day (in DB) -> birthDay (in object)
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy()); // one of the methods
