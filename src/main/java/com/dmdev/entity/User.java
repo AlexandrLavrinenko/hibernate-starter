@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.*;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
@@ -81,7 +79,7 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private Set<UserChat> userChats = new HashSet<>();  // PersistintSet,  а не PersistentBag
 
     @Builder.Default
-    @BatchSize(size = 3)
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 

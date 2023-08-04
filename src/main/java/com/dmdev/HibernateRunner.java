@@ -25,9 +25,8 @@ public class HibernateRunner {
             List<User> users = session.createQuery("select u from User u ", User.class)
                     .list();
 
-//            users.forEach(user -> System.out.println(user.getPayments().size()));   // Будет сформировано N + 1 запросов.
-            // 1 - запрос на получение юзеров, и по отдельному запросу на каждого юзера на получение платежей.
-            users.forEach(user -> System.out.println(user.getCompany().getName()));
+            users.forEach(user -> System.out.println(user.getPayments().size()));
+//            users.forEach(user -> System.out.println(user.getCompany().getName()));
 
 
             session.getTransaction().commit();
