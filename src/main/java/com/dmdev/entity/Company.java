@@ -32,7 +32,6 @@ import java.util.TreeMap;
 @ToString(exclude = "users")
 @Builder
 @Entity
-@BatchSize(size = 3)
 public class Company {
 
     @Id
