@@ -32,6 +32,18 @@ import java.util.Set;
 
 import static com.dmdev.util.StringUtils.SPACE;
 
+@FetchProfile(name = "withCompanyAndPayments", fetchOverrides = {   // может ставиться над сущностью и над пакетом
+        @FetchProfile.FetchOverride(
+                entity = User.class,        // сущность, в которой нужно переписать нашу ассоциацию
+                association = "company",    // название поля
+                mode = FetchMode.JOIN       // JOIN, SELECT, SUBSELECT (для коллекций)
+        ),
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "payments",
+                mode = FetchMode.JOIN
+        )
+})
 @NamedQuery(name = "findUserByName", query = "select u from User u " +
         "left join u.company c " +
         "where u.personalInfo.firstname = :firstname and c.name = :companyName " +
@@ -64,7 +76,7 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id") // company_id
+    @JoinColumn(name = "company_id")
     private Company company;
 
 //    @OneToOne(
