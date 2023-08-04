@@ -1,5 +1,6 @@
 package com.dmdev.util;
 
+import com.dmdev.converter.BirthdayConverter;
 import com.dmdev.entity.*;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.experimental.UtilityClass;
@@ -26,7 +27,17 @@ public class HibernateUtil {
         // XML in hibernate.cfg.hml
         // configuration.addClass(User.class);          // old variant
 
+        // birth_day (in DB) -> birthDay (in object)
+        configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy()); // one of the methods
+
         configuration.addAnnotatedClass(User.class);    // modern variant
+
+        // set converter without annotation way
+        configuration.addAttributeConverter(new BirthdayConverter(), true);
+
+        // registry Type
+        configuration.registerTypeOverride(new JsonBinaryType());
+
         configuration.addAnnotatedClass(Company.class); // modern variant
         configuration.addAnnotatedClass(Profile.class); // modern variant
         configuration.addAnnotatedClass(Chat.class);    // modern variant
@@ -34,15 +45,6 @@ public class HibernateUtil {
 //        configuration.addAnnotatedClass(Programmer.class);
 //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
-
-        // birth_day (in DB) -> birthDay (in object)
-        configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy()); // one of the methods
-
-        // set converter without annotation way
-        // configuration.addAttributeConverter(new BirthdayConverter(), true);
-
-        // registry Type
-        configuration.registerTypeOverride(new JsonBinaryType());
         return configuration;
     }
 

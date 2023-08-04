@@ -11,6 +11,8 @@
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
+    <!-- DB schema will be updated if needed -->
+    <property name="hibernate.hbm2ddl.auto">validate</property>
 
 <!--    old way mapping Entity-->
     <mapping class="com.dmdev.entity.User"/>
@@ -21,8 +23,5 @@
 <!--    <mapping class="com.dmdev.entity.Programmer"/>-->
 <!--    <mapping class="com.dmdev.entity.Manager"/>-->
     <mapping class="com.dmdev.entity.Payment"/>
-
-    <!-- DB schema will be updated if needed -->
-    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>
 </hibernate-configuration>

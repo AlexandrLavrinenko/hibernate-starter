@@ -1,7 +1,14 @@
+CREATE TABLE payment
+(
+    id BIGSERIAL PRIMARY KEY,
+    amount INT NOT NULL,
+    receiver_id BIGINT NOT NULL REFERENCES users
+);
+-- --------------------------------------------------------------------------------------------
 CREATE TABLE company_locale
 (
-    company_id INT NOT NULL REFERENCES company(id),
-    lang CHAR(2) NOT NULL,
+    company_id  INT          NOT NULL REFERENCES company (id),
+    lang        CHAR(2)      NOT NULL,
     description VARCHAR(128) NOT NULL,
     PRIMARY KEY (company_id, lang)
 );
@@ -10,11 +17,11 @@ CREATE TABLE company_locale
 DROP TABLE users_chat;
 CREATE TABLE users_chat
 (
-    id      BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users (id) NOT NULL UNIQUE,
-    chat_id BIGINT REFERENCES chat (id)  NOT NULL UNIQUE,
-    created_at TIMESTAMP NOT NULL,
-    created_by VARCHAR(64) NOT NULL,
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT REFERENCES users (id) NOT NULL UNIQUE,
+    chat_id    BIGINT REFERENCES chat (id)  NOT NULL UNIQUE,
+    created_at TIMESTAMP                    NOT NULL,
+    created_by VARCHAR(64)                  NOT NULL,
     UNIQUE (user_id, chat_id)
 );
 
