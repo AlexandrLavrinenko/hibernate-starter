@@ -21,14 +21,14 @@ import java.util.Set;
 
 import static com.dmdev.util.StringUtils.SPACE;
 
-@NamedEntityGraph(name = "WithCompanyAndChat",
-attributeNodes = {
-        @NamedAttributeNode("company"),
-        @NamedAttributeNode(value = "userChats", subgraph = "chats")
-},
-subgraphs = {
-        @NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat")) // UserChat.chat
-})
+//@NamedEntityGraph(name = "WithCompanyAndChat",
+//attributeNodes = {
+//        @NamedAttributeNode("company"),
+//        @NamedAttributeNode(value = "userChats", subgraph = "chats")
+//},
+//subgraphs = {
+//        @NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat")) // UserChat.chat
+//})
 @FetchProfile(name = "withCompanyAndPayments", fetchOverrides = {   // может ставиться над сущностью и над пакетом
         @FetchProfile.FetchOverride(
                 entity = User.class,        // сущность, в которой нужно переписать нашу ассоциацию
