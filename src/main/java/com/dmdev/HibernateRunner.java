@@ -28,7 +28,7 @@ public class HibernateRunner {
 //            TestDataImporter.importData(sessionFactory);
 
 
-            Payment payment = session.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            Payment payment = session.find(Payment.class, 1L);
             payment.setAmount(payment.getAmount() + 10);
 
             Payment theSamePayment = session1.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
