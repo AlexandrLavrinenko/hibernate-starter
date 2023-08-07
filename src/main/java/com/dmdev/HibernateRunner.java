@@ -13,6 +13,7 @@ import javax.persistence.LockModeType;
 import javax.transaction.Transactional;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 @Slf4j
 public class HibernateRunner {
@@ -27,15 +28,22 @@ public class HibernateRunner {
 
 //            TestDataImporter.importData(sessionFactory);
 
+            List<Payment> payments = session.createQuery("select p from Payment p", Payment.class)
+                    .setLockMode(LockModeType.PESSIMISTIC_FORCE_INCREMENT)
+                    .setTimeout(10000)                                   // таймаут для конкретного запроса
+                    .setHint("javax.persistence.lock.timeout")  // таймаут на то, как долго будет удерживаться блокировка на записях
+                    .list();
 
-            Payment payment = session.find(Payment.class, 1L);
+            session.get()
+
+            Payment payment = session.find(Payment.class, 1L, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
             payment.setAmount(payment.getAmount() + 10);
 
-            Payment theSamePayment = session1.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            Payment theSamePayment = session1.find(Payment.class, 1L);
             theSamePayment.setAmount(theSamePayment.getAmount() + 20);
 
-            session.getTransaction().commit();
             session1.getTransaction().commit();
+            session.getTransaction().commit();
         }
     }
 
