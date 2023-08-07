@@ -1,7 +1,9 @@
+DROP TABLE payment;
 CREATE TABLE payment
 (
     id BIGSERIAL PRIMARY KEY,
     amount INT NOT NULL,
+    version BIGINT NOT NULL,
     receiver_id BIGINT NOT NULL REFERENCES users
 );
 -- --------------------------------------------------------------------------------------------

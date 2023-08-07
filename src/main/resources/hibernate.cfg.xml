@@ -13,6 +13,9 @@
     <property name="format_sql">true</property>
     <!-- DB schema will be updated if needed -->
     <property name="hibernate.hbm2ddl.auto">validate</property>
+    <!--    1, 2, 4, 8-->
+    <property name="hibernate.connection.isolation">8</property>
+
 
 <!--    old way mapping Entity-->
     <mapping class="com.dmdev.entity.User"/>
