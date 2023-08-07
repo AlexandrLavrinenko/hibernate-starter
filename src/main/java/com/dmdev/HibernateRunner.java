@@ -1,6 +1,8 @@
 package com.dmdev;
 
 import com.dmdev.entity.Payment;
+import com.dmdev.entity.Profile;
+import com.dmdev.entity.User;
 import com.dmdev.util.HibernateUtil;
 import com.dmdev.util.TestDataImporter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,26 +26,25 @@ public class HibernateRunner {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
 
-//            session.setDefaultReadOnly(true);                   // для всех сущностей
-//            session.setReadOnly(Payment.class, true);           // для конкретной сущности
-            session.beginTransaction();
+//            session.doWork(connection -> connection.setAutoCommit(true));
 
-            session.createNativeQuery("SET TRANSACTION READ ONLY;")
-                    .executeUpdate();                             // READ ONLY на уровне БД
+            Profile profile = Profile.builder()
+                    .user(session.find(User.class, 1L))
+                    .language("ua")
+                    .street("Banderi, 28")
+                    .build();
+            session.save(profile);
 
-//            TestDataImporter.importData(sessionFactory);
-
-//            List<Payment> payments = session.createQuery("select p from Payment p", Payment.class)
-//                    .setReadOnly(true)
-//                    .setHint(QueryHints.READ_ONLY, true)
-//                    .list();
+//            session.beginTransaction();
+            List<Payment> payments = session.createQuery("select p from Payment p", Payment.class)
+                    .list();
 
             Payment payment = session.find(Payment.class, 1L);
+            payment.setAmount(payment.getAmount() + 10);        // 3
+//            session.save(payment);                            // 4
+//            session.flush();
 
-            // случайная попытка изменения
-            payment.setAmount(payment.getAmount() + 10);
-
-            session.getTransaction().commit();
+//            session.getTransaction().commit();
         }
     }
 
