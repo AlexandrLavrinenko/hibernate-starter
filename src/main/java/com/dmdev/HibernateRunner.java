@@ -24,6 +24,7 @@ public class HibernateRunner {
 
             Payment payment = session.find(Payment.class, 1L);
             payment.setAmount(payment.getAmount() + 10);
+            session.save(payment);
 
             session.getTransaction().commit();
         }

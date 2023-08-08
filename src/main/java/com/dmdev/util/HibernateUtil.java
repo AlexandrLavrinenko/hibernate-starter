@@ -2,11 +2,15 @@ package com.dmdev.util;
 
 import com.dmdev.converter.BirthdayConverter;
 import com.dmdev.entity.*;
+import com.dmdev.listener.AuditTableListener;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
 
 @UtilityClass
 // Private constructor + Final class
@@ -19,7 +23,20 @@ public class HibernateUtil {
         Configuration configuration = buildConfiguration();
 
         configuration.configure();
-        return configuration.buildSessionFactory();
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        registerListeners(sessionFactory);
+
+
+        return sessionFactory;
+    }
+
+    private static void registerListeners(SessionFactory sessionFactory) {
+        SessionFactoryImpl sessionFactoryImpl = sessionFactory.unwrap(SessionFactoryImpl.class);
+        EventListenerRegistry listenerRegistry = sessionFactoryImpl.getServiceRegistry().getService(EventListenerRegistry.class);
+        AuditTableListener auditTableListener = new AuditTableListener();
+        listenerRegistry.appendListeners(EventType.PRE_INSERT, auditTableListener);     // добавляем в конец списка
+        listenerRegistry.appendListeners(EventType.PRE_DELETE, auditTableListener);     // добавляем в конец списка
+//        listenerRegistry.prependListeners();    // добавляем в начало списка
     }
 
     public static Configuration buildConfiguration() {
@@ -45,6 +62,7 @@ public class HibernateUtil {
 //        configuration.addAnnotatedClass(Programmer.class);
 //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
+        configuration.addAnnotatedClass(Audit.class);
         return configuration;
     }
 
