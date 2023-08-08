@@ -2,14 +2,13 @@ package com.dmdev;
 
 import com.dmdev.entity.Payment;
 import com.dmdev.util.HibernateUtil;
-import com.dmdev.util.TestDataImporter;
+import com.dmdev.util.DataImporter;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.transaction.Transactional;
 import java.sql.SQLException;
-import java.util.List;
 
 @Slf4j
 public class HibernateRunner {
@@ -19,12 +18,12 @@ public class HibernateRunner {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
 
-//            TestDataImporter.importData(sessionFactory);
+            DataImporter.importData(sessionFactory);
 
             session.beginTransaction();
 
             Payment payment = session.find(Payment.class, 1L);
-            payment.setAmount(payment.getAmount() + 1);
+            payment.setAmount(payment.getAmount() + 10);
 
             session.getTransaction().commit();
         }

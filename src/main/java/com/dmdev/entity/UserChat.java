@@ -1,18 +1,32 @@
 package com.dmdev.entity;
 
-import lombok.*;
+import com.dmdev.listener.UserChatListener;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.time.Instant;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @Builder
 @Entity
 @Table(name = "users_chat")
-public class UserChat extends AuditableEntity<Long>{
+@EntityListeners(UserChatListener.class)
+public class UserChat extends AuditableEntity<Long> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,10 +37,6 @@ public class UserChat extends AuditableEntity<Long>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
     private Chat chat;
-
-//    private Instant createdAt;
-//
-//    private String createdBy;
 
     public void setUser(User user) {
         this.user = user;

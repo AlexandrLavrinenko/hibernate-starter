@@ -1,17 +1,18 @@
 package com.dmdev.entity;
 
+import com.dmdev.listener.AuditDatesListener;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
 @Setter
 @MappedSuperclass
+@EntityListeners(AuditDatesListener.class)
 public abstract class AuditableEntity<T extends Serializable> implements BaseEntity<T> {
     private Instant createdAt;
 
@@ -21,15 +22,4 @@ public abstract class AuditableEntity<T extends Serializable> implements BaseEnt
 
     private String updatedBy;
 
-    @PrePersist
-    public void prePersist() {  // метод назвать можно как угодно, главное тип VOID
-        setCreatedAt(Instant.now());
-//        setCreatedBy(SecurityContext.getUser().getUserName());    // в реальных приложениях
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        setUpdatedAt(Instant.now());
-//        setUpdatedBy(SecurityContext.getUser().getUserName());    // в реальных приложениях
-    }
 }

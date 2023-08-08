@@ -5,7 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Data
 @NoArgsConstructor
@@ -13,13 +19,13 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class Profile {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-//    @PrimaryKeyJoinColumn // --> when the primary key (PRIMARY KEY) is also a FOREIGN KEY too
     private User user;
 
     private String street;
@@ -29,7 +35,5 @@ public class Profile {
     public void setUser(User user) {
 //        user.setProfile(this);
         this.user = user;
-        // since the ID is not auto-generated, but depends on the USER entity, the following should be done:
-//        this.id = user.getId(); // --> when the primary key (PRIMARY KEY) is also a FOREIGN KEY too
     }
 }

@@ -4,16 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
-import java.time.Instant;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Builder
 @Entity
 public class Payment extends AuditableEntity<Long> {
@@ -31,16 +37,4 @@ public class Payment extends AuditableEntity<Long> {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private User receiver;
-
-//    @PrePersist
-//    public void prePersist() {  // метод назвать можно как угодно, главное тип VOID
-//        setCreatedAt(Instant.now());
-////        setCreatedBy(SecurityContext.getUser().getUserName());    // в реальных приложениях
-//    }
-//
-//    @PreUpdate
-//    public void preUpdate() {
-//        setUpdatedAt(Instant.now());
-////        setUpdatedBy(SecurityContext.getUser().getUserName());    // в реальных приложениях
-//    }
 }

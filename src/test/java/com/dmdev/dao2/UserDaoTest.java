@@ -4,7 +4,7 @@ import com.dmdev.dto.PaymentFilter;
 import com.dmdev.entity.Payment;
 import com.dmdev.entity.User;
 import com.dmdev.util.HibernateTestUtil;
-import com.dmdev.util.TestDataImporter;
+import com.dmdev.util.DataImporter;
 import com.querydsl.core.Tuple;
 import lombok.Cleanup;
 import org.hibernate.Session;
@@ -28,7 +28,7 @@ class UserDaoTest {
 
     @BeforeAll
     public void initDb() {
-        TestDataImporter.importData(sessionFactory);
+        DataImporter.importData(sessionFactory);
     }
 
     @AfterAll
