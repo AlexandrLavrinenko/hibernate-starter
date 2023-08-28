@@ -20,6 +20,7 @@ public class DataImporter {
 
     public void importData(SessionFactory sessionFactory) {
         @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
         Company microsoft = saveCompany(session, "Microsoft");
         Company apple = saveCompany(session, "Apple");

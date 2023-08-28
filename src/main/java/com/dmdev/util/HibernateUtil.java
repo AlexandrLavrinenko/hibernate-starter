@@ -2,6 +2,7 @@ package com.dmdev.util;
 
 import com.dmdev.converter.BirthdayConverter;
 import com.dmdev.entity.*;
+import com.dmdev.interceptor.GlobalInterceptor;
 import com.dmdev.listener.AuditTableListener;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.experimental.UtilityClass;
@@ -24,7 +25,7 @@ public class HibernateUtil {
 
         configuration.configure();
         SessionFactory sessionFactory = configuration.buildSessionFactory();
-        registerListeners(sessionFactory);
+//        registerListeners(sessionFactory);
 
 
         return sessionFactory;
@@ -63,7 +64,10 @@ public class HibernateUtil {
 //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
         configuration.addAnnotatedClass(Audit.class);
+        configuration.addAnnotatedClass(Revision.class);
+
+        configuration.setInterceptor(new GlobalInterceptor());
+
         return configuration;
     }
-
 }

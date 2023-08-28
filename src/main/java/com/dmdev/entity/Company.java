@@ -7,7 +7,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.SortNatural;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -32,6 +36,8 @@ import java.util.TreeMap;
 @ToString(exclude = "users")
 @Builder
 @Entity
+@Audited
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Companies")
 public class Company {
 
     @Id
@@ -41,12 +47,14 @@ public class Company {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @NotAudited
     @Builder.Default
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "username")
     @SortNatural
     private Map<String, User> users = new TreeMap<>();
 
+    @NotAudited
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
