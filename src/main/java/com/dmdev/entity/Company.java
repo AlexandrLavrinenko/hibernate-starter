@@ -25,6 +25,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,7 +39,7 @@ import java.util.TreeMap;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Companies")
-public class Company {
+public class Company implements BaseEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
