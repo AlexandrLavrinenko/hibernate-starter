@@ -2,6 +2,7 @@ package com.dmdev.dao2;
 
 import com.dmdev.entity.BaseEntity;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,12 +12,15 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
 
     private final Class<E> clazz;
+    @Getter
     private final EntityManager entityManager;
 //    private final Session session;
 //    private final SessionFactory sessionFactory;
@@ -52,12 +56,12 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
     }
 
     @Override
-    public Optional<E> findById(K id) {
+    public Optional<E> findById(K id, Map<String, Object> properties) {
 //        @Cleanup Session session = sessionFactory.openSession();
 //        Session session = sessionFactory.getCurrentSession();
 //        return Optional.ofNullable(session.find(clazz, id));
 
-        return Optional.ofNullable(entityManager.find(clazz, id));
+        return Optional.ofNullable(entityManager.find(clazz, id, properties));
     }
 
     @Override
